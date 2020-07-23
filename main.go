@@ -212,6 +212,10 @@ func (a *Agent) getPIN() (string, error) {
 	}
 	p.Set("desc", fmt.Sprintf("YubiKey serial number: %d"+retries, a.serial))
 	p.Set("prompt", "Please enter your PIN:")
+	
+	// We want to enable external password caching - see https://gist.github.com/mdeguzis/05d1f284f931223624834788da045c65#file-info-pinentry-L324
+	p.Option("allow-external-password-cache")
+	p.Set("KEYINFO", fmt.Sprintf("--yubikey-id-%d", a.serial))
 	pin, err := p.GetPin()
 	return string(pin), err
 }
